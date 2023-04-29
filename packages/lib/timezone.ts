@@ -4,6 +4,24 @@ import type { ICity } from "@calcom/ui/components/form/timezone-select";
 
 import isProblematicTimezone from "./isProblematicTimezone";
 
+import moment from "moment-timezone";
+
+function displayTimeInUserTimezone(time: string, timezone: string, otherTimezone: string): string {
+  const userTime = moment.tz(time, timezone);
+  const otherUserTime = userTime.clone().tz(otherTimezone);
+  const formattedUserTime = userTime.format("h:mm A z");
+  const formattedOtherUserTime = otherUserTime.format("h:mm A z");
+
+  return `${formattedUserTime} / ${formattedOtherUserTime}`;
+}
+const userTime = "2023-04-29T10:00:00Z";
+const userTimezone = "America/Los_Angeles";
+const otherUserTimezone = "Europe/London";
+
+const displayedTime = displayTimeInUserTimezone(userTime, userTimezone, otherUserTimezone);
+console.log(displayedTime); // "10:00 AM PDT / 6:00 PM BST"
+
+
 function findPartialMatch(itemsToSearch: string, searchString: string) {
   const searchItems = searchString.split(" ");
   return searchItems.every((i) => itemsToSearch.toLowerCase().indexOf(i.toLowerCase()) >= 0);
